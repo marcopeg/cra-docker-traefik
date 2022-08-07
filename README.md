@@ -2,8 +2,18 @@
 
 How to run a Create React App for development using Docker and Traefik
 
+In this how-to you learn:
+
+- How to Dockerize a React App for development
+- How to properly manage dependencies in a Dockerized environment
+- How to build a custom Docker image and control the build context
+- How to run a local reverse proxy with [Traefik][traefik]
+- How to map a Docker-Compose service to a local URL
+- How to map a Docker-Compose service to a custom domain
+
 ## Table Of Contents
 
+- [Quick Start](#quick-start)
 - [Create the Project's Folder](#create-the-projects-folder)
 - [Create (a) React App](#create-a-react-app)
 - [Build the Developement Container](#build-the-developement-container)
@@ -14,6 +24,23 @@ How to run a Create React App for development using Docker and Traefik
 - [Add the Reverse Proxy](#add-the-reverse-proxy)
 - [Proxy the React App](#proxy-the-react-app)
 - [Use a Custom Domain](#use-a-custom-domain)
+
+## Quick Start
+
+If you want a feeling of what you are about to build, follow these instructions:
+
+1. Clone the repo:  
+   `git clone git@github.com:marcopeg/cra-docker-traefik.git`
+2. Open the project:  
+   `cd cra-docker-traefik`
+3. Start the project:  
+   `docker-compose up`
+4. Test is with a browser:  
+   `http://app.localhost`
+5. Play with the Traefik's console:  
+   `http://localhost:8080`
+
+> **NOTE:** You need [Docker-Compose][dc] running on your laptop, and ports `80` and `8080` to be available.
 
 ## Create the Project's Folder
 
