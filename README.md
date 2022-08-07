@@ -2,6 +2,19 @@
 
 How to run a Create React App for development using Docker and Traefik
 
+## Table Of Contents
+
+- [Create the Project's Folder](#create-the-projects-folder)
+- [Create (a) React App](#create-a-react-app)
+- [Build the Developement Container](#build-the-developement-container)
+- [Run the Docker-Compose Project](#run-the-docker-compose-project)
+- [Add New Dependencies](#add-new-dependencies)
+  - [Add Dependencies Programmatically](#add-dependencies-programmatically)
+  - [Add Dependencies Dynamically](#add-dependencies-dynamically)
+- [Add the Reverse Proxy](#add-the-reverse-proxy)
+- [Proxy the React App](#proxy-the-react-app)
+- [Use a Custom Domain](#use-a-custom-domain)
+
 ## Create the Project's Folder
 
 As first step, let's just initialize a new project.
@@ -131,9 +144,81 @@ Open your browser to `http://localhost:3000` and enjoy a fully working React App
 
 Also, try to modify `arc/App.js` to prove that the hot-reload is properly working for you.
 
-## Adding New Dependencies
+## Add New Dependencies
 
-The approach with a
+You have 2 possible ways to add new dependencies to your project:
+
+1. **Edit & Rebuild**: add dependencies programmatically
+2. **SSH & Install**: add dependencies dynamically
+
+> But the end-game of both methods is to make sure that your dependencies are always correctly saved in the project's `package.json` manifest.
+
+Let's say you want to add [Axios][axios] and make some REST calls to some backend.
+
+### Add Dependencies Programmatically
+
+First, go to [NPM][npm] and find the package you want to add, and its current version.
+
+At the time of writing, the current version is `0.27.2`.
+
+With this info, edit your `package.json` and add the dependency:
+
+```json
+{
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
+```
+
+Now it's just a matter of restarting the project AND rebuild the development container:
+
+```bash
+docker-compose up --build
+```
+
+> This method IS EXPLICIT and it is the one I recommend to use. 
+>
+> It sucks a bit that rebuilding the container is a slow operation. But everyone need coffe once in a while, am I right?
+
+### Add Dependencies Dynamically
+
+This method consists into connecting to the running container's terminal (via `docker exec`) and run the `npm add xxx` command in there.
+
+Before we proceed, we need to _map a new volume_ into the `app` service, that is to make sure that the dependencies that we add dynamically will be properly persisted in the App's `package.json` manifest:
+
+```yaml
+app:
+  volumes:
+      - ./package.json:/usr/src/app/package.json:delegated
+```
+
+Restart your project.
+
+Now you can use a separated terminal session to connect into the running container:
+
+```bash
+docker-compose exec app /bin/bash
+```
+
+And from here, you can finally install Axios:
+
+```bash
+npm add axios
+```
+
+> This method feels faster, but it's easy to miss a dependency this way.
+>
+> Remember:
+> 1. map your `package.json` volume
+> 2. use `npm add` that always edit the manifest (no `npm install`!)
+> 3. double check your `package.json` and verify the depenency was properly tracked down
+
+I discourage you from using this method as it increases the chances to miss tracking a dependency in the `package.json`, which is a very common mistake.
+
+Nevertheless, I use it in the beginning of any project when adding new dependencies happens by the minute. I really don't want to keep rebuilding the environment: too many coffees!
+
+When the project gets more stable, I remove the `package.json` volume and ask my team to use the programmatic method only.
 
 ## Add the Reverse Proxy
 
@@ -189,7 +274,7 @@ services:
 
 > `localhost` comes as preconfigured routed host name in most systems. If it doesn't work, you may need to edit the `/etc/hosts` file.
 
-## Set a Custom Domain
+## Use a Custom Domain
 
 Now that you have a [full `docker-compose.yml`](./docker-compose.yml) to play with, you may want to start messing around with custom domains.
 
