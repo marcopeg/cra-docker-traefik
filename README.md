@@ -1,15 +1,15 @@
-# cra-docker-traefik
+# CRA Docker Traefik
 
-How to run a Create React App for development using Docker and Traefik
+How to run a [Create React App][cra] development environment using [Docker][docker], [Docker-Compose][dc], and [Traefik][traefik].
 
-In this how-to you learn:
+You are about to learn:
 
-- How to Dockerize a React App for development
-- How to properly manage dependencies in a Dockerized environment
+- How to Dockerize a React App _for development_
+- How to **properly manage dependencies** in a Dockerized environment
 - How to build a custom Docker image and control the build context
-- How to run a local reverse proxy with [Traefik][traefik]
-- How to map a Docker-Compose service to a local URL
-- How to map a Docker-Compose service to a custom domain
+- How to **run a reverse proxy** with [Traefik][traefik]
+- How to map a [Docker-Compose][dc] service to a local URL
+- How to map a [Docker-Compose][dc] service to a **custom domain**
 
 ## Table Of Contents
 
@@ -321,3 +321,9 @@ Second, you shoud [edit your `/etc/hosts`](https://www.google.com/search?q=how+t
 
 🙌 Restart the project, and enjoy your React App available at `http://foobar.com`.
 
+[cra]: https://create-react-app.dev/
+[docker]: https://www.docker.com/get-started/
+[dc]: https://docs.docker.com/compose/
+[traefik]: https://traefik.io/
+[canary]: https://www.google.com/chrome/canary/
+[marcopeg]: https://marcopeg.com
